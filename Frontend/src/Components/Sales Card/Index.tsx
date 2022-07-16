@@ -2,12 +2,16 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NotificationButton from "../NotificationButton/Index"
-
+import ptBr from "date-fns/locale/pt-BR"
+import {registerLocale}  from "react-datepicker"
 import "./Estilos.css"
+registerLocale("ptBr", ptBr);
 function SalesCard() {
+
   const min = new Date(new Date().setDate(new Date().getDate() - 365));
   const max = new Date();
   const [Min_Data, setMin_data] = useState(min);
+  
   const [Max_Data, setMax_data] = useState(max);
   return (
     <div className="dsmeta-card">
@@ -15,6 +19,7 @@ function SalesCard() {
       <div>
         <div className="dsmeta-form-control-container">
           <DatePicker
+             locale={ptBr}
             selected={Min_Data}
             onChange={(date: Date) => setMin_data(date)}
             className="dsmeta-form-control"
@@ -23,6 +28,7 @@ function SalesCard() {
         </div>
         <div className="dsmeta-form-control-container">
           <DatePicker
+            locale={ptBr}
             selected={Max_Data}
             onChange={(date: Date) => setMax_data(date)}
             className="dsmeta-form-control"
