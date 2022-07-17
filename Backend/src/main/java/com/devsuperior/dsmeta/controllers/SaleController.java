@@ -29,6 +29,12 @@ public class SaleController {
 	}
 	@GetMapping("/{id}/notification")
 	public void notifysms(@PathVariable Long id) {
-		smsservice.sendSms(id);
+		try {
+			smsservice.sendSms(id);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	
 	}
 }
