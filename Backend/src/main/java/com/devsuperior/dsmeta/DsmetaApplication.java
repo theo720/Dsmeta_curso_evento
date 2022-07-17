@@ -2,8 +2,6 @@ package com.devsuperior.dsmeta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
 public class DsmetaApplication {
@@ -12,8 +10,6 @@ public class DsmetaApplication {
 		SpringApplication.run(DsmetaApplication.class, args);
 	}
 	
-	@RequestMapping(value = "/")
-	public String importSql() {
-		return("import.sql");
-	}
+	
+	
 }
