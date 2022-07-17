@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import NotificationButton from "../NotificationButton/Index"
 import ptBr from "date-fns/locale/pt-BR"
-import {registerLocale}  from "react-datepicker"
+import { registerLocale } from "react-datepicker"
 import "./Estilos.css"
+import axios from "axios";
+import { BASE_URL } from "../../util/request";
+import { Sale } from "../../models/sale";
 registerLocale("ptBr", ptBr);
 function SalesCard() {
 
@@ -13,13 +16,21 @@ function SalesCard() {
   const [Min_Data, setMin_data] = useState(min);
   
   const [Max_Data, setMax_data] = useState(max);
+  const [sales, setsales] = useState<Sale[]>([])
+  useEffect(() => {
+    const dmin = Min_Data.toISOString().slice(0,10);
+    const dmax = Max_Data.toISOString().slice(0,10)
+    axios.get(`${BASE_URL}/sales?mindate=${dmin}&maxdate=${dmax}`).then(response => {
+      setsales(response.data.content);
+    });
+  }, [Min_Data,Max_Data])
   return (
     <div className="dsmeta-card">
       <h2 className="dsmeta-sales-title">Vendas</h2>
       <div>
         <div className="dsmeta-form-control-container">
           <DatePicker
-             locale={ptBr}
+            locale={ptBr}
             selected={Min_Data}
             onChange={(date: Date) => setMin_data(date)}
             className="dsmeta-form-control"
@@ -51,39 +62,27 @@ function SalesCard() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="show992">#341</td>
-              <td className="show576">08/07/2022</td>
-              <td>Anakin</td>
-              <td className="show992">15</td>
-              <td className="show992">11</td>
-              <td>R$ 55300.00</td>
-              <td>
-                <NotificationButton />
-              </td>
-            </tr>
-            <tr>
-              <td className="show992">#341</td>
-              <td className="show576">08/07/2022</td>
-              <td>Anakin</td>
-              <td className="show992">15</td>
-              <td className="show992">11</td>
-              <td>R$ 55300.00</td>
-              <td>
-                <NotificationButton />
-              </td>
-            </tr>
-            <tr>
-              <td className="show992">#341</td>
-              <td className="show576">08/07/2022</td>
-              <td>Anakin</td>
-              <td className="show992">15</td>
-              <td className="show992">11</td>
-              <td>R$ 55300.00</td>
-              <td>
-                <NotificationButton />
-              </td>
-            </tr>
+            {
+              sales.map(sale => {
+                return (
+                  <tr key={sale.id}>
+                    <td className="show992">{sale.id}</td>
+                    <td className="show576">{new Date(sale.date).toLocaleDateString()}</td>
+                    <td>{sale.sellerName}</td>
+                    <td className="show992">{sale.visited}</td>
+                    <td className="show992">{sale.deals}</td>
+                    <td>R$ {parseFloat(sale.amount.toFixed(2)).toLocaleString('pt-BR', {
+                      currency: 'BRL',
+                      minimumFractionDigits: 2
+                    })}</td>
+                    <td>
+                      <NotificationButton saleId={sale.id} />
+                    </td>
+                  </tr>
+                )
+              })
+            }
+
           </tbody>
 
         </table>

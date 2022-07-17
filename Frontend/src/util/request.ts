@@ -1,0 +1,1 @@
+export const BASE_URL = import.meta.env.VITA_BACKEND_URL ?? "http://127.0.0.1:8080"
